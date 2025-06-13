@@ -1063,7 +1063,7 @@
         }
 
         .brand{
-          border: 2px solid red;
+          /* border: 2px solid red; */
           display: flex;
           gap: 7rem;
           padding: 20px;
@@ -1082,7 +1082,7 @@
           width: 100%;
           background-color: black;
           border-radius: 10px;
-          border: 2px solid red;
+          /* border: 2px solid red; */
           /* display: flex; */
         }
       }
@@ -1653,6 +1653,36 @@
           }
         });
       });
+      document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.querySelector('.toggle-button');
+    const navMenu = document.getElementById('topMenu');
+
+    // --- Initial Hide (important if not hidden by CSS or inline style) ---
+    // Make sure the menu is hidden when the page loads
+    // This handles cases where display: none; isn't set in CSS or HTML
+    navMenu.style.display = 'none';
+
+    // --- Click Listener for Toggle ---
+    toggleButton.addEventListener('click', (event) => {
+        event.preventDefault(); // Stop the default link behavior of '#'
+
+        // Check the current display style
+        if (navMenu.style.display === 'none') {
+            // If currently hidden, show it as a block element (or flex, depending on your desired layout)
+            navMenu.style.display = 'block'; // Or 'flex' if you want its children to be flexbox
+        } else {
+            // If currently visible, hide it
+            navMenu.style.display = 'none';
+        }
+
+        // Accessibility: Update aria-expanded attribute
+        const isExpanded = navMenu.style.display !== 'none';
+        toggleButton.setAttribute('aria-expanded', isExpanded);
+
+        // Optional: You could also add/remove a class for the hamburger icon if you had CSS for that,
+        // but since you don't want CSS, we'll skip that part here.
+    });
+});
     </script>
   </body>
 </html>
