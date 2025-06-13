@@ -731,7 +731,7 @@
       .panic-button-container {
         position: fixed;
         top: 40px;
-        right: 20px;
+        right: 0px;
         z-index: 999;
       }
 
@@ -739,7 +739,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 120px;
+        width: 80px;
         height: 50px;
         border: none;
         border-radius: 15px;
@@ -1059,6 +1059,31 @@
 
         #menuIcon{
           display: block;
+          cursor: pointer;
+        }
+
+        .brand{
+          border: 2px solid red;
+          display: flex;
+          gap: 7rem;
+          padding: 20px;
+        }
+
+        .toggle-button{
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          width: 30px;
+          height: 21px;
+        }
+
+        .toggle-button .bar{
+          height: 3px;
+          width: 100%;
+          background-color: black;
+          border-radius: 10px;
+          border: 2px solid red;
+          /* display: flex; */
         }
       }
     </style>
@@ -1078,12 +1103,19 @@
         <div class="sidebar-header">
           <span>
             <div class="brand">
-              <img
+              <div>
+                <img
                 src="https://github.com/luthandodake10111/iliso--frontend-images-/raw/main/iliso%20logo.png"
                 alt="Logo"
               />
-
-               <span id="menuIcon">☰</span>
+              </div>
+              
+             <a href="#" class="toggle-button">
+              <span class="bar"></span>
+               <span class="bar"></span>
+                <span class="bar"></span>
+             </a>
+              
             </div>
           </span>
         </div>
