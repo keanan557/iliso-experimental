@@ -354,7 +354,7 @@
   /* Styles for the sidebar when it is ACTIVELY EXPANDED on mobile (toggled by JS) */
   .sidebar.expanded-mobile { /* Using a new class for clarity */
       width: 250px; /* Expanded width on mobile */
-      padding: 5rem; /* Expanded padding */
+      /* padding: 5rem;  */
   }
   .sidebar.expanded-mobile .sidebar-header .brand img {
       max-height: 50px; /* Original size */
@@ -412,6 +412,46 @@
   .sidebar:not(.expanded-mobile) #expand-btn {
       transform: rotate(180deg); /* Button points left (collapsed) */
   }
+
+  /* Styles for the expand-btn (outside media query - for desktop) */
+#expand-btn {
+    
+    /* position: absolute;  */
+    /* top: 1rem; */
+    /* right: 1rem; */
+    background: #0f4392;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    justify-content: center; /* Use flexbox for centering content inside */
+    align-items: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    z-index: 10;
+    outline: none;
+}
+#expand-btn:hover {
+    background-color: #0c3577;
+}
+
+/* Styles for the expand-btn inside the mobile media query */
+@media (max-width: 600px){
+    /* Make expand button visible on mobile */
+    #expand-btn {
+        display: flex; /* Show button on mobile */
+    }
+
+    /* Adjust button rotation based on sidebar state (collapsed/expanded) */
+    .sidebar:not(.expanded-mobile) #expand-btn {
+        transform: rotate(180deg); /* Button points left (collapsed mini-sidebar) */
+    }
+    .sidebar.expanded-mobile #expand-btn {
+        transform: rotate(0deg); /* Button points right (expanded overlay) */
+    }
+}
 
     }
   </style>
