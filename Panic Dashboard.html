@@ -429,7 +429,7 @@
     align-items: center;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.2s ease;
     z-index: 10;
     outline: none;
 }
@@ -437,8 +437,15 @@
     background-color: #0c3577;
 }
 
+/* ADD THIS NEW BLOCK: */
+#expand-btn:active {
+    background-color: #082855; /* Darker when clicked */
+    box-shadow: 0 0 0 5px rgba(15, 67, 146, 0.3); /* Subtle blue glow */
+    transform: scale(0.95); /* Shrink slightly */
+}
+
 /* Styles for the expand-btn inside the mobile media query */
-@media (max-width: 600px){
+
     /* Make expand button visible on mobile */
     #expand-btn {
         display: flex; /* Show button on mobile */
@@ -451,7 +458,9 @@
     .sidebar.expanded-mobile #expand-btn {
         transform: rotate(0deg); /* Button points right (expanded overlay) */
     }
-}
+
+  
+
 
     }
   </style>
@@ -473,8 +482,9 @@
         </div>
       </div>
       <ul class="nav-menu top-menu">
-        <li class="nav-link"><i class="bx bx-user-plus"></i><span>Add New Admin</span></li>
-        <li class="nav-link"><i class="bx bx-user-plus"></i><span>Add New Employee</span></li>
+        <!-- <li class="nav-link"><i class="bx bx-user-plus"></i><span>Add New Admin</span></li> -->
+        <!-- <li class="nav-link"><i class="bx bx-user-plus"></i><span>Add New Employee</span></li> -->
+         <li class="nav-link"><i class="bx bx-home"></i><span>Dashboard</span></li>
       </ul>
       <div class="profile-dropdown">
         <button class="nav-link">
