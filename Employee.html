@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet" />
+    <title>Employee Information</title>
+
+    <style>
+      /* === Sidebar Styles === */
+
+      .sidebar {
+        width: 200px;
+        background-color: #fff;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar-header img {
+        align-items: center;
+        margin-right: 20px;
+        margin-bottom: 50px;
+        /* margin: 0 auto; */
+        width: 80%;
+      }
+
+      .flex-spacer {
+        flex-grow: 1;
+      }
+
+      .nav-menu {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+      }
+      .nav-link.active {
+        background-color: #00459f;
+        color: blue;
+        /* font-weight: bold; */
+      }
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px;
+        border-radius: 6px;
+        cursor: pointer;
+        background-color: #00459f; /* Blue background */
+        color: white; /* White text */
+        transition: background-color 0.3s ease;
+      }
+
+      /* Optional: Hover effect */
+      .nav-link:hover {
+        background-color: #3367d6; /* Lighter blue on hover */
+      }
+
+      /* Optional: Active state styling */
+      .nav-link.active {
+        background-color: #003370; /* Darker blue for active item */
+        /* font-weight: bold; */
+      }
+
+      .logout-modal {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        max-width: 400px;
+        text-align: center;
+        margin: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .button-group button {
+        padding: 10px 20px;
+        margin: 10px;
+        /* font-weight: bold; */
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .button-group button:first-child {
+        background-color: #00459f;
+        color: white;
+      }
+
+      .button-group button:last-child {
+        background-color: #f0f0f0;
+        color: #333;
+      }
+
+      /* === Add Employee Modal === */
+      .modal-overlay#employeeModal { /* Specificity for employeeModal overlay */
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        overflow: auto;
+      }
+
+      .modal-overlay .modal-content {
+        background: white;
+        border-radius: 8px;
+        padding: 25px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        margin: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .close-btn {
+        float: right;
+        font-size: 24px;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+      }
+
+      form input,
+      form select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        width: 100%;
+        margin-bottom: 10px; /* Added margin for better spacing in form */
+      }
+
+      .form-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .form-buttons button {
+        flex: 1;
+        padding: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+      }
+
+      .form-buttons button:first-child {
+        background-color: #00459f;
+        color: white;
+      }
+
+      .form-buttons button:last-child {
+        background-color: #f0f0f0;
+        color: #333;
+        border: 1px solid #ddd;
+      }
+
+
+       /* Pagination Styles */
+    .pagination {
+      display: flex;
+      gap: 10px;
+      align-items: right;
+      justify-content: flex-end;
+      margin-top: 24px;
+      /* font-family: "Poppins", sans-serif; */
+      font-size: 14px;
+      color: #000;
+    }
+
+    .pagination nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    .pagination a {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #e5e7eb;
+      background-color: #f9fafb;
+      color: #0f4392;
+      text-decoration: none;
+      font-weight: 500;
+      min-width: 25px;
+      text-align: center;
+      gap: 10px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .pagination a:hover {
+      background-color: #e5e7eb;
+    }
+
+    .pagination a.active {
+      background-color: #0f4392;
+      color: #fff;
+      border-color: #0f4392;
+    }
+
+      /* === Main Content === */
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+         background-color: #99999900;
+      }
+
+      .main-board {
+        margin-left: 230px;
+        padding: 20px;
+        width: calc(100% - 250px);
+        /* padding: 30px; */
+      }
+
+      .welcome-msg h2 {
+        font-size: x-large;
+        margin: 0;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .search-contain {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .search-icon-input {
+        position: relative;
+        width: 250px;
+      }
+      .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+      }
+      .search-box {
+        /* padding-left: -300px; */
+        width: fit-content;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      .search-box:focus {
+        border-color: #004aad;
+        box-shadow: 0 0 5px rgba(0, 74, 173, 0.4);
+      }
+
+      .search-bar {
+        /* border: 2px solid red; */
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+      }
+      #sortByStatus {
+        width: 180px;
+        padding: 8px 12px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background-color: #f9f9f9;
+        color: #333;
+        outline: none;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      #sortByStatus:focus {
+        border-color: #004aad;
+        box-shadow: 0 0 5px rgba(0, 74, 173, 0.5);
+      }
+
+      /* Base table styling, will be overridden by responsive for table layout */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      #tableContainer th {
+        text-align: left; /* Left-align text */
+        color: #666; /* Grey text (adjust hex as needed) */
+        background-color: white; /* White background */
+        padding: 8px 12px; /* Internal spacing */
+        /* font-weight: normal;  */
+      }
+
+      .active-employees{
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        padding: 15px;
+        padding-top: 5px; /* Adjusted padding-top */
+        border-radius: 30px;
+      }
+
+      th {
+        padding: 12px;
+        border-bottom: 2px solid white;
+        background-color: #f5f5f5;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+      }
+
+      tr.selected {
+        background-color: #e0e0e0;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 20px;
+      }
+
+      .pagination button {
+        padding: 8px 16px;
+        font-size: 14px;
+        /* font-weight: bold; */
+        cursor: pointer;
+        transition: transform 0.2s;
+        border-radius: 10px;
+        border: 2px solid;
+      }
+
+      .pagination button:nth-child(1) {
+        background-color: #a2b4d6;
+        border-color: #204a87;
+        color: black;
+      }
+
+      .pagination button:nth-child(2) {
+        background-color: #f19999;
+        border-color: #d11e1e;
+        color: black;
+      }
+            .edit-row-btn {
+  background-color: #a2b4d6;
+  border: 2px solid #204a87;
+  color: #000000;
+  border-radius: 10px;
+  padding: 12px 24px;
+  /* font-weight: bold; */
+  cursor: pointer;
+}
+
+.delete-row-btn {
+  background-color: #f19999;
+  border: 2px solid #d11e1e;
+  color: #000000;
+  border-radius: 10px;
+  padding: 12px 24px;
+  /* font-weight: bold; */
+  cursor: pointer;
+}
+
+      .add-employee-button {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+      }
+
+      .add-employee-button button {
+        background-color: #00459f;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 20px 24px;
+        font-weight: 600;
+        height: 60px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s, transform 0.2s;
+      }
+
+      .add-employee-button button:hover {
+        background-color: #3367d6;
+        transform: translateY(-1px);
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 50px;
+        padding: 15px 0;
+        font-size: 14px;
+        color: #666;
+      }
+
+      body > ul.nav-menu.bottom-menu,
+      body > #logoutButton {
+        display: none !important;
+      }
+
+      /* responsiveness */
+
+      /* tablet */
+      @media screen and (max-width: 768px) {
+        .main-board {
+          margin-left: 80px; /* Adjust main content margin for collapsed sidebar */
+          width: calc(100% - 100px);
+        }
+
+        .sidebar {
+            width: 70px; /* Collapse sidebar on tablets */
+        }
+
+        .sidebar-header img {
+            width: 70%; /* Adjust logo size */
+            margin-left: -5px; /* Center logo */
+            margin-bottom: 20px;
+        }
+
+        .nav-link span {
+            display: none; /* Hide text in nav links */
+        }
+
+        .nav-link {
+            justify-content: center; /* Center icons */
+            padding: 12px; /* Adjust padding */
+        }
+
+        .welcome-msg h2 {
+            padding: 10px; /* Reduce padding */
+        }
+
+        .search-contain {
+            flex-direction: column; /* Stack search elements vertically */
+            align-items: flex-start;
+            gap: 15px; /* Space between search bar and sort */
+        }
+
+        .search-bar {
+            width: 100%;
+            justify-content: space-between; /* Space out search box and sort on one line if possible */
+        }
+
+        .search-icon-input {
+            width: calc(100% - 200px); /* Adjust width to make room for sort-by-status */
+        }
+        
+        /* Table responsiveness - Horizontal Scroll */
+        #tableContainer {
+            overflow-x: auto; /* Enable horizontal scrolling for the table container */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        #tableContainer table {
+            width: auto; /* Allow table to be wider than its container */
+            min-width: 650px; /* Minimum width to ensure content doesn't crunch */
+        }
+
+        #tableContainer th,
+        #tableContainer td {
+            white-space: nowrap; /* Prevent text from wrapping inside cells */
+            padding: 8px 10px; /* Slightly reduce padding */
+            font-size: 0.9em; /* Slightly reduce font size */
+        }
+
+        .add-employee-button button {
+            padding: 15px 20px;
+            font-size: 14px;
+            height: auto;
+        }
+
+        .pagination {
+            flex-direction: column; /* Stack pagination elements */
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .pagination nav {
+            justify-content: flex-end; /* Align page numbers to the right */
+        }
+
+        .pagination a {
+            padding: 5px 8px; /* Smaller pagination buttons */
+            min-width: 20px;
+        }
+      }
+      
+
+
+      /* mobile */
+      @media(max-width:480px){
+        .main-board {
+          margin-left: 60px; /* Further adjust margin for smaller phones */
+          width: calc(100% - 70px); /* Adjust main content width */
+        }
+        
+        .active-employees{
+          /* These previous negative margins and fixed widths were causing issues,
+             relying on parent flow for sizing now */
+          width: auto; /* Let it adapt to parent width */
+          margin-left: 0; /* Remove negative margin */
+          /* border: 2px solid red; */ /* Debug border removed */
+        }
+
+        #tableContainer{
+          /* border: 2px solid red; */ /* Debug border removed */
+          /* width: 300px; */ /* Fixed width removed */
+          display: block; /* Keep as block for overflow */
+          align-items: initial;
+          justify-content: initial;
+        }
+
+          #expand-btn {
+    
+    position: absolute; 
+    top: 0rem;
+    left: 0rem;
+    background: none;
+    color: #0f4392;
+    border: none;
+    /* border-radius: 50%; */
+    /* width: 30px; */
+    /* height: 30px; */
+    justify-content: center; /* Use flexbox for centering content inside */
+    align-items: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.2s ease;
+    z-index: 10;
+    outline: none;
+}
+
+        .welcome-msg{
+          margin-left: 0; /* Remove negative margin */
+          text-align: left; /* Adjust alignment for small screens */
+          padding: 10px 0; /* Reduce padding */
+        }
+
+        .welcome-msg h2 {
+            font-size: large; /* Smaller heading */
+        }
+
+        .sidebar {
+          width: 50px; /* Smallest sidebar width */
+          padding: 1rem 0.2rem;
+        }
+
+        .sidebar-header img {
+            width: 80%; /* Adjust logo size */
+            margin-left: 0;
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            padding: 8px; /* Even smaller padding for nav links */
+        }
+
+        .search-contain {
+            flex-direction: column; /* Ensure stacked */
+            align-items: stretch; /* Stretch to full width */
+            gap: 10px;
+        }
+
+        .search-bar {
+            flex-direction: column; /* Stack search input and sort select */
+            gap: 10px;
+            align-items: stretch; /* Stretch to full width */
+        }
+
+        .search-icon-input {
+            width: 100%; /* Full width for search input */
+        }
+        .search-box {
+            width: 100%; /* Full width for search input */
+            box-sizing: border-box; /* Include padding in width */
+        }
+
+        #sortByStatus {
+            width: 100%; /* Full width for sort select */
+            box-sizing: border-box;
+        }
+
+        /* Keep table horizontal scroll behavior */
+        #tableContainer table {
+            min-width: 600px; /* Maintain minimum width for scrolling */
+        }
+
+        #tableContainer th,
+        #tableContainer td {
+            padding: 6px 8px; /* Even smaller padding */
+            font-size: 0.85em; /* Smaller font size */
+        }
+
+        .edit-row-btn, .delete-row-btn {
+            padding: 8px 12px; /* Smaller buttons */
+            font-size: 0.85em;
+        }
+
+        .add-employee-button button {
+            padding: 12px 18px;
+            font-size: 13px;
+        }
+
+        /* Your previous explicit column hiding rules are removed to allow horizontal scroll */
+        /* td:nth-child(2), td:nth-child(3), td:nth-child(4) { display: table-cell; } */
+        /* th:nth-child(2), th:nth-child(3), th:nth-child(4) { display: table-cell; } */
+      }
+
+
+    </style>
+  </head>
+
+  <body>
+    <aside class="sidebar" id="sidebar">
+       <button id="expand-btn">         
+           <svg class="hamburger-span" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+</button>
+      <div class="sidebar-header">
+        <img src="https://github.com/luthandodake10111/iliso--frontend-images-/raw/main/iliso%20logo.png" alt="Logo" />
+      </div>
+
+      <ul class="nav-menu top-menu" id="topMenu">
+        <li class="nav-link" id="addminButton"><i class="bx bx-user"></i><span>Dashboard</span></li>
+        <ul class="nav-menu top-menu" id="topMenu">
+          <li class="nav-link" id="viewadmin"><i class="bx bx-user"></i><span>View Admin</span></li>
+        </ul>
+      </ul>
+
+      <div style="flex-grow: 1"></div>
+      <div style="margin-top: auto; padding: 20px 0; border-top: 1px solid #e0e0e0">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px">
+          <img
+            src="https://github.com/luthandodake10111/iliso--frontend-images-/raw/main/tara%20logo.png"
+            alt="Profile"
+            style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"
+          />
+          <span style="font-weight: 500">Tara Snell</span>
+        </div>
+
+        <ul class="nav-menu bottom-menu" id="sidebarLogout">
+          <li class="nav-link" id="logoutButton" style="padding: 10px; display: flex; align-items: center; gap: 10px">
+            <i class="bx bx-log-out"></i><span>Log-Out</span>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="main-board">
+      <div class="welcome-msg"><h2>Employee information</h2></div>
+
+      <section class="active-employees">
+        <div class="search-contain">
+          <div class="search-bar">
+            <div class="search-icon-input">
+              <i class="bx bx-search-alt search-icon"></i>
+              <input type="text" class="search-box" placeholder="     Search" id="searchBox" />
+            </div>
+            <select id="sortByStatus">
+              <option value="all">Sort by: All</option>
+              <option value="On Site">Sort by: Newest</option>
+              <option value="Off Site">Sort by: Oldest</option>
+            </select>
+          </div>
+        </div>
+
+        <h3>All Employees</h3>
+        <div id="tableContainer">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee Name</th>
+                <th>Department</th>
+                <th>Email</th>
+                <th>Employee ID</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="employeeTableBody"></tbody>
+          </table>
+        </div>
+
+
+
+
+     
+
+        <div class="pagination" id="pagination">
+    <span id="dataInfo">Showing data 1 to 8 of 256K entries</span>
+    <nav id="paginationNav">
+      <a href="#" id="prevPage" class="nav-link">Previous</a>
+      <span id="pageLinks"></span>
+      <a href="#" id="nextPage" class="nav-link">Next</a>
+    </nav>
+  </div>
+ </section>
+
+         <div class="add-employee-button">
+          <button id="employeeButton" class="nav-link">
+            <i class="bx bx-user-plus"></i><span>Add New Employee</span>
+          </button>
+        </div>
+      <footer>
+        <div class="footer-slogan" id="updatePagination">Powered By ILISO</div>
+      </footer>
+    
+
+    <div class="modal-overlay" id="logoutModal">
+      <div class="logout-modal">
+        <p>⚠️ Are you sure you want to log out?</p>
+        <div class="button-group">
+          <button id="confirmLogoutBtn">Yes, log me out</button>
+          <button id="cancelLogoutBtn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="employeeModal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="document.getElementById('employeeModal').style.display='none'">&times;</span>
+        <h2>Add Employee</h2>
+        <form id="employee-form" onsubmit="return false;">
+          <input type="hidden" id="employeeIndex" />
+          <input type="text" placeholder="Employee Name" id="employeeName" required />
+          <select name="Dept" id="empDept" required>
+            <option value="" selected disabled>Select Department</option>
+            <option value="solar">Solar</option>
+            <option value="sales-force">Sales Force</option>
+            <option value="academy">LC Academy</option>
+            <option value="lc-studio">LC Studio</option>
+          </select>
+          <input type="email" placeholder="Email" id="email" autocomplete="email" required />
+          <input type="text" placeholder="Employee ID" id="employeeId" required />
+
+          <div class="form-buttons">
+            <button id="submitemployee" type="submit">Submit</button>
+            <button id="cancelemployee" type="button" onclick="document.getElementById('employeeModal').style.display='none'">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    </div>
+
+    <script>
+      // ====== Existing Code: Do Not Touch ======
+      document.getElementById("addminButton").addEventListener("click", function () {
+        window.location.href = "dashboard.html";
+      });
+
+      document.getElementById("viewadmin").addEventListener("click", function () {
+        window.location.href = "Admin.html";
+      });
+
+      const logoutText = document.createElement("span");
+      logoutText.textContent = "Log-Out";
+
+      // sidebarLogout.appendChild(logoutButton); // This line seemed to be causing issues/redundancy based on your original HTML structure
+      
+      const modalOverlay = document.createElement("div");
+      modalOverlay.className = "modal-overlay";
+      modalOverlay.id = "logoutModal";
+      modalOverlay.style.display = "none";
+
+      const logoutModal = document.createElement("div");
+      logoutModal.className = "logout-modal";
+
+      const warningText = document.createElement("p");
+      warningText.textContent = "⚠️ Are you sure you want to log out?";
+
+      const buttonGroup = document.createElement("div");
+      buttonGroup.className = "button-group";
+
+      const confirmButton = document.createElement("button");
+      confirmButton.id = "confirmLogoutBtn";
+      confirmButton.textContent = "Yes, log me out";
+
+      const cancelButton = document.createElement("button");
+      cancelButton.id = "cancelLogoutBtn";
+      cancelButton.textContent = "Cancel";
+
+      buttonGroup.appendChild(confirmButton);
+      buttonGroup.appendChild(cancelButton);
+
+      logoutModal.appendChild(warningText);
+      logoutModal.appendChild(buttonGroup);
+      modalOverlay.appendChild(logoutModal);
+
+      // document.body.appendChild(modalOverlay); // This also seemed to be redundant as the modal is already in HTML
+
+      document.getElementById("logoutButton").addEventListener("click", function () {
+        document.getElementById("logoutModal").style.display = "block";
+      });
+
+      document.getElementById("cancelLogoutBtn").addEventListener("click", function () {
+        document.getElementById("logoutModal").style.display = "none";
+      });
+
+      document.getElementById("confirmLogoutBtn").addEventListener("click", function () {
+        window.location.href = "Login.html";
+      });
+      // ====== End of Unchanged Section ======
+
+      // ====== DUMMY EMPLOYEE DATA ======
+      const dummyEmployees = [
+        { id: 1, name: "Sibongile Nkosi", department: "Solar", email: "sibongile.nkosi@lifechoices.co.za", empId: "EMP001" },
+        { id: 2, name: "Lungile Moyo", department: "Solar", email: "lungile.moyo@lifechoices.co.za", empId: "EMP002" },
+        { id: 3, name: "Thabo Molefe", department: "Sales Force", email: "thabo.molefe@lifechoices.co.za", empId: "EMP003" },
+        { id: 4, name: "Keshav Naidoo", department: "LC Academy", email: "keshav.naidoo@lifechoices.co.za", empId: "EMP004" },
+        { id: 5, name: "Zanele Khumalo", department: "LC Academy", email: "zanele.khumalo@lifechoices.co.za", empId: "EMP005" },
+        { id: 6, name: "Sipho Zulu", department: "LC Academy", email: "sipho.zulu@lifechoices.co.za", empId: "EMP006" },
+        { id: 7, name: "Naledi Moeketsi", department: "Sales Force", email: "naledi.moeketsi@lifechoices.co.za", empId: "EMP007" },
+        { id: 8, name: "Farai Gumbo", department: "Sales Force", email: "farai.gumbo@lifechoices.co.za", empId: "EMP008" },
+        { id: 9, name: "Karabo Dlamini", department: "LC Studio", email: "karabo.dlamini@lifechoices.co.za", empId: "EMP009" },
+        { id: 10, name: "Fatima Patel", department: "LC Studio", email: "fatima.patel@lifechoices.co.za", empId: "EMP010" },
+      ];
+
+      let currentPage = 1;
+      const rowsPerPage = 5;
+      let selectedEmployeeId = null; // To store the ID of the employee being edited/deleted
+
+      function renderTable(data, page) {
+        const tbody = document.getElementById("employeeTableBody");
+        tbody.innerHTML = "";
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const paginatedData = data.slice(start, end);
+
+        paginatedData.forEach((emp) => {
+          const row = document.createElement("tr");
+          row.dataset.empid = emp.empId; // Use data-empid for unique identification
+          row.innerHTML = `
+            <td>${emp.name}</td>
+            <td>${emp.department}</td>
+            <td>${emp.email}</td>
+            <td>${emp.empId}</td>
+            <td>
+              <button class="edit-row-btn" data-empid="${emp.empId}">Edit</button>
+              <button class="delete-row-btn" data-empid="${emp.empId}">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        // Attach event listeners to the new buttons
+        attachRowButtonListeners();
+        updatePagination(data.length, page);
+      }
+
+      function attachRowButtonListeners() {
+        document.querySelectorAll(".edit-row-btn").forEach((button) => {
+          button.onclick = (event) => handleEdit(event.target.dataset.empid);
+        });
+
+        document.querySelectorAll(".delete-row-btn").forEach((button) => {
+          button.onclick = (event) => handleDelete(event.target.dataset.empid);
+        });
+      }
+
+      function updatePagination(total) {
+  const pagination = document.getElementById("paginationNav");
+  pagination.innerHTML = "";
+
+  const totalPages = Math.ceil(total / rowsPerPage);
+
+  // Previous Button
+  const prev = document.createElement("a");
+  prev.textContent = "Previous";
+  prev.href = "#";
+  prev.className = currentPage === 1 ? "disabled" : "";
+  prev.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (currentPage > 1) {
+      currentPage--;
+      renderTable(dummyEmployees, currentPage);
+    }
+  });
+  pagination.appendChild(prev);
+
+  // Page Numbers
+  for (let i = 1; i <= totalPages; i++) {
+    const page = document.createElement("a");
+    page.textContent = i;
+    page.href = "#";
+    page.className = i === currentPage ? "active" : "";
+    page.addEventListener("click", (e) => {
+      e.preventDefault();
+      currentPage = i;
+      renderTable(dummyEmployees, currentPage);
+    });
+    pagination.appendChild(page);
+  }
+
+  // Next Button
+  const next = document.createElement("a");
+  next.textContent = "Next";
+  next.href = "#";
+  next.className = currentPage === totalPages ? "disabled" : "";
+  next.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderTable(dummyEmployees, currentPage);
+    }
+  });
+  pagination.appendChild(next);
+}
+
+   function handleEdit(empId) {
+        const emp = dummyEmployees.find((e) => e.empId === empId);
+        if (!emp) return;
+
+        // Populate the modal with the employee's current data
+        document.getElementById("employeeName").value = emp.name;
+        document.getElementById("empDept").value = emp.department.toLowerCase();
+        document.getElementById("email").value = emp.email;
+        document.getElementById("employeeId").value = emp.empId;
+        document.getElementById("employeeIndex").value = dummyEmployees.findIndex((e) => e.empId === empId); // Store index for update
+
+        document.getElementById("employeeModal").style.display = "block";
+        document.querySelector("#employeeModal h2").textContent = "Edit Employee"; // Change modal title
+      }
+
+      function handleDelete(empId) {
+        const confirmDelete = confirm("Are you sure you want to delete this employee?");
+        if (!confirmDelete) return;
+
+        const index = dummyEmployees.findIndex((e) => e.empId === empId);
+        if (index > -1) {
+          dummyEmployees.splice(index, 1);
+          renderTable(dummyEmployees, currentPage); // Re-render the table after deletion
+        }
+      }
+
+      // Handle Add New Employee / Update Existing Employee
+      document.addEventListener("DOMContentLoaded", function () {
+        // === Ensure the "Add New Employee" button works ===
+        const employeeButton = document.getElementById("employeeButton");
+        if (employeeButton) {
+          employeeButton.addEventListener("click", function () {
+            document.getElementById("employeeModal").style.display = "block";
+            document.getElementById("employee-form").reset(); // Clear form for new entry
+            document.getElementById("employeeIndex").value = ""; // Clear index for new entry
+            document.getElementById("employeeId").readOnly = false; // Employee ID is editable for new entries
+            document.querySelector("#employeeModal h2").textContent = "Add Employee"; // Set modal title back
+          });
+        } else {
+          console.warn("Employee button not found!");
+        }
+
+        // === Submit handler for adding new or updating employee ===
+        const form = document.getElementById("employee-form");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById("employeeName").value.trim();
+            const dept = document.getElementById("empDept").value;
+            const email = document.getElementById("email").value.trim();
+            const id = document.getElementById("employeeId").value.trim();
+            const employeeIndex = document.getElementById("employeeIndex").value; // Get the stored index
+
+            if (!name || !dept || !email || !id) {
+              alert("Please fill in all fields.");
+              return;
+            }
+
+            if (employeeIndex !== "") {
+              // Existing employee: Update
+              const index = parseInt(employeeIndex);
+              dummyEmployees[index] = {
+                ...dummyEmployees[index], // Keep existing properties not in form
+                name: name,
+                department: dept.charAt(0).toUpperCase() + dept.slice(1),
+                email: email,
+                empId: id, // EmpID might change if allowed by user
+              };
+            } else {
+              // New employee: Add
+              // Prevent duplicate empId
+              const exists = dummyEmployees.some((emp) => emp.empId === id);
+              if (exists) {
+                alert("Employee with this ID already exists.");
+                return;
+              }
+
+              const newEmp = {
+                id: dummyEmployees.length + 1, // Simple incremental ID, consider better unique ID generation
+                name,
+                department: dept.charAt(0).toUpperCase() + dept.slice(1),
+                email,
+                empId: id,
+              };
+              dummyEmployees.push(newEmp);
+            }
+
+            currentPage = Math.ceil(dummyEmployees.length / rowsPerPage);
+            renderTable(dummyEmployees, currentPage);
+            document.getElementById("employeeModal").style.display = "none";
+            this.reset(); // Reset the form
+          });
+        }
+
+        // === Search functionality ===
+        const searchBox = document.getElementById("searchBox");
+        if (searchBox) {
+          searchBox.addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+            const filtered = dummyEmployees.filter(
+              (emp) => emp.name.toLowerCase().includes(searchTerm) || emp.empId.toLowerCase().includes(searchTerm)
+            );
+            renderTable(filtered, 1); // Always reset to page 1 on filter
+          });
+        }
+
+        // === Sort by Status (Newest/Oldest) ===
+        const sortByStatus = document.getElementById("sortByStatus");
+        if (sortByStatus) {
+          sortByStatus.addEventListener("change", function () {
+            let sortedEmployees = [...dummyEmployees]; // Create a copy to sort
+
+            if (this.value === "On Site") {
+              // Sort by Newest (assuming higher ID means newer, or you can add a 'dateAdded' property)
+              sortedEmployees.sort((a, b) => b.id - a.id);
+            } else if (this.value === "Off Site") {
+              // Sort by Oldest (assuming lower ID means older)
+              sortedEmployees.sort((a, b) => a.id - b.id);
+            }
+            // 'all' value is already handled by simply rendering the unsorted dummyEmployees
+            renderTable(sortedEmployees, 1);
+          });
+        }
+
+        // === Initialize Table ===
+        renderTable(dummyEmployees, currentPage);
+
+        // Remove the rogue logout buttons (from your original code)
+        // document.querySelectorAll("body > ul.nav-menu.bottom-menu, body > #logoutButton").forEach((button) => button.remove()); // This line should be commented out or removed as it targets elements already in your main HTML.
+      });
+    </script>
+  </body>
+</html>
